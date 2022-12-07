@@ -12,6 +12,7 @@ public class OmokFrame extends JFrame{
 	}
 	
 	public void clickedButton() {
+		//hi
 		
 	}
 }
