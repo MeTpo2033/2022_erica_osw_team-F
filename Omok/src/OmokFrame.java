@@ -10,9 +10,13 @@ public class OmokFrame extends JFrame{
 	private JLabel set_score_p2; // 백돌의 세트 스코어
 	private ImageIcon white_doll = new ImageIcon("");
 	private ImageIcon black_doll;
+	private int p1_score;
+	private int p2_score;
 	
-	public OmokFrame(OmokBoard b) {
+	public OmokFrame(OmokBoard b, int ps1, int ps2) {
 		int x1 = 0, x2 = 0;
+		p1_score = ps1;
+		p2_score = ps2;
 		board = b;
 		button_board = new FrameButton[19][19];
 		Container cp = getContentPane();
@@ -26,10 +30,10 @@ public class OmokFrame extends JFrame{
 		p2.add(new JLabel("White")); 
 		p1.add(p2, BorderLayout.NORTH); // 흑돌 플레이어와 백돌 플레이어 이름을 frame에 보여줌
 
-		set_score_p1 = new JLabel("0");
+		set_score_p1 = new JLabel(Integer.toString(p1_score));
 		p3.add(set_score_p1); 		
 		p3.add(new JLabel(":"));
-		set_score_p2 = new JLabel("0");
+		set_score_p2 =  new JLabel(Integer.toString(p2_score));
 		p3.add(set_score_p2);
 		p1.add(p3, BorderLayout.SOUTH); // 흑돌 플레이어와 백돌 플레이어의 이긴 횟수를 frame에 보여줌
 
@@ -52,17 +56,17 @@ public class OmokFrame extends JFrame{
 	public FrameButton[][] button_board() { return button_board ; }
 	
 	public void endgame(String winner) {
-		JOptionPane.showMessageDialog(null, "승자는" + winner + "입니다.");
+		JOptionPane.showMessageDialog(null, "승자는 " + winner + " 입니다.");
 	}
 	
 	public void restart() {
 		String re = JOptionPane.showInputDialog("계속 하시겠습니까? Y/N ");
 		if(re.equals("Y") || re.equals("y")) {
-			setVisible(true);
-			new OmokFrame(board);
+			setVisible(false);
+			new OmokFrame(new OmokBoard(), p1_score, p2_score);
 		}
 		else if(re.equals("N") || re.equals("n")) {
-			setVisible(false);
+			System.exit(0);
 		}
 	}
 	
@@ -79,8 +83,10 @@ public class OmokFrame extends JFrame{
 				button_board[r][c].setBounds(100, 30, 100, 100);
 				button_board[r][c].setVisible(true);
 				board.consoleReturnBoard();
-				if(board.check() == 5) {
+				if(board.check() == 1) {
 					winner = "player1";
+					p1_score += 1;
+					set_score_p1.setText(Integer.toString(p1_score));
 					endgame(winner);
 					restart();
 				}
@@ -92,8 +98,10 @@ public class OmokFrame extends JFrame{
 				button_board[r][c].setIcon(black_doll);
 				button_board[r][c].setVisible(true);
 				board.consoleReturnBoard();
-				if(board.check() == -5) {
+				if(board.check() == -1) {
 					winner = "player2";
+					p2_score += 1;
+					set_score_p2.setText(Integer.toString(p2_score));
 					endgame(winner);
 					restart();
 				}
