@@ -53,18 +53,60 @@ public class OmokFrame extends JFrame{
 		setVisible(true);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
-	public FrameButton[][] button_board() {  }
+	public FrameButton[][] button_board() { return button_board ; }
 	
 	public void endgame(String winner) {
-		
+		JOptionPane.showMessageDialog(null, "승자는 " + winner + " 입니다.");
 	}
 	
 	public void restart() {
-	
+		String re = JOptionPane.showInputDialog("계속 하시겠습니까? Y/N ");
+		if(re.equals("Y") || re.equals("y")) {
+			setVisible(false);
+			new OmokFrame(new OmokBoard(), p1_score, p2_score);
+		}
+		else if(re.equals("N") || re.equals("n")) {
+			System.exit(0);
+		}
 	}
 	
 	public void clickedButton(int row, int col) {
+		String winner;
+		int r = row;
+		int c = col;
+		white_doll = new ImageIcon("./Image/"+"whitedoll"+".png");
+		black_doll = new ImageIcon("./Image/"+"blackdoll"+".png");
+		if(board.isBlank(row, col)) {
+			if (turn == 0) {
+				board.add(r, c, 1);
+				button_board[r][c].setIcon(white_doll);
+				button_board[r][c].setBounds(100, 30, 100, 100);
+				button_board[r][c].setVisible(true);
+				board.consoleReturnBoard();
+				if(board.check() == 1) {
+					winner = "player1";
+					p1_score += 1;
+					set_score_p1.setText(Integer.toString(p1_score));
+					endgame(winner);
+					restart();
+				}
 
-		
+				turn = 1;
+			}
+			else if( turn == 1){
+				board.add(r, c, -1);
+				button_board[r][c].setIcon(black_doll);
+				button_board[r][c].setVisible(true);
+				board.consoleReturnBoard();
+				if(board.check() == -1) {
+					winner = "player2";
+					p2_score += 1;
+					set_score_p2.setText(Integer.toString(p2_score));
+					endgame(winner);
+					restart();
+				}
+				turn = 0;
+			}
+		}
 	}
 }
