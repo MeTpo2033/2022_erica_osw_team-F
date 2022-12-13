@@ -25,29 +25,39 @@ public class OmokBoard{
 		return board[row+2][col+2] == 0;
 	}
 	
-	/** check33() - 흑돌의 3-3체크
-	 */
-	public boolean check33(){
-		return true;
-	}
-	
-	/** check44() - 흑돌의 4-4체크
-	 */
-	public boolean check44(){
-		return true;
-	}
-	
 	/** check() - 배열 요소의 합을 계산하며 오목체크
 	 *  @return integer 값으로 출력 (검은돌 오목 = 1, 흰돌 오목 = -1, 오목완성X = 0)
 	 */
 	public int check(){
-
+		for (int i = 2; i < 21; i++) {
+			for (int j = 2; j < 21; j++) {
+				if(board[i][j-2]+board[i][j-1]+board[i][j]+board[i][j+1]+board[i][j+2] == 5 ||
+				   board[i-2][j]+board[i-1][j]+board[i][j]+board[i+1][j]+board[i+2][j] == 5 ||
+				   board[i-2][j-2]+board[i-1][j-1]+board[i][j]+board[i+1][j+1]+board[i+2][j+2] == 5 ||
+				   board[i+2][j-2]+board[i+1][j-1]+board[i][j]+board[i-1][j+1]+board[i-2][j+2] == 5) {
+					return 1;
+				}
+				else if(board[i][j-2]+board[i][j-1]+board[i][j]+board[i][j+1]+board[i][j+2] == -5 ||
+				        board[i-2][j]+board[i-1][j]+board[i][j]+board[i+1][j]+board[i+2][j] == -5 ||
+				        board[i-2][j-2]+board[i-1][j-1]+board[i][j]+board[i+1][j+1]+board[i+2][j+2] == -5 ||
+				        board[i+2][j-2]+board[i+1][j-1]+board[i][j]+board[i-1][j+1]+board[i-2][j+2] == -5) {
+					return -1;
+				}
+			}
+		}
+		return 0;
 	}
 	
 	/** consoleReturnBoard() - console에 보드 배열을 프린트
 	 */
 	public void consoleReturnBoard() {
-       
+        for (int i = 2; i < 21; i++) {
+            for (int j = 2; j < 21; j++) {
+                System.out.print(board[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println("----------------------");
     }
 	
 	
