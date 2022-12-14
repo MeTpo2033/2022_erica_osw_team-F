@@ -8,12 +8,13 @@ public class Po extends Piece{
 	
 	@Override
 	public boolean moveAble(int row, int col) {
+		System.out.println(getName());
 		boolean check = false;
 		if(getCol() == col){
 			if(getRow() > row){ // 위로 가는 상황
 				for(int i = getRow()-1; i >= row+1; i--){
 					if(board[i][getCol()] != null){ // 가는 경로에 뭔가 있으면
-						if(check){
+						if(check || board[i][getCol()].getName().equals("包")){
 							return false;
 						}else{
 							check = true;
@@ -23,6 +24,9 @@ public class Po extends Piece{
 				if((board[row][getCol()] != null && board[row][getCol()].getCountry() == getCountry()) || !check){
 					return false;
 				}else{
+					if(board[row][getCol()] != null && board[row][getCol()].getName().equals("包")){
+						return false;
+					}//포 가 포를 못넘고 못잡는 기능 추가
 					return true;
 				}
 			}
@@ -30,7 +34,7 @@ public class Po extends Piece{
 			if(getRow() < row){ // 아래로 가는 상황
 				for(int i = getRow()+1; i <= row-1; i++){
 					if(board[i][getCol()] != null){
-						if(check){
+						if(check || board[i][getCol()].getName().equals("包")){
 							return false;
 						}else{
 							check = true;
@@ -40,6 +44,9 @@ public class Po extends Piece{
 				if((board[row][getCol()] != null && board[row][getCol()].getCountry() == getCountry()) || !check){
 					return false;
 				}else{
+					if(board[row][getCol()] != null && board[row][getCol()].getName().equals("包")){
+						return false;
+					}
 					return true;
 				}
 			}
@@ -47,7 +54,7 @@ public class Po extends Piece{
 			if(getCol() > col){ // 오른쪽으로 가는 상황
 				for(int i = getCol()-1; i >= col + 1; i--){
 					if(board[getRow()][i] != null){ // 가는 경로에 뭔가 있으면
-						if(check){
+						if(check || board[getRow()][i].getName().equals("包")){
 							return false;
 						}else{
 							check = true;
@@ -57,6 +64,9 @@ public class Po extends Piece{
 				if((board[getRow()][col] != null && board[getRow()][col].getCountry() == getCountry()) || !check){
 					return false;
 				}else{
+					if(board[getRow()][col] != null && board[getRow()][col].getName().equals("包")){
+						return false;
+					}
 					return true;
 				}
 			}
@@ -64,16 +74,19 @@ public class Po extends Piece{
 			if(getCol() < col){ // 왼쪽으로 가는 상황
 				for(int i = getCol()+1; i <= col - 1; i++){
 					if(board[getRow()][i] != null){ // 가는 경로에 뭔가 있으면
-						if(check){
+						if(check || board[getRow()][i].getName().equals("包")){
 							return false;
 						}else{
 							check = true;
 						}
 					}
 				}
-				if((board[getRow()][col] != null && board[getRow()][col].getCountry() == getCountry()) || !check){
+				if((board[getRow()][col] != null && board[getRow()][col].getCountry() == getCountry())|| !check){
 					return false;
 				}else{
+					if(board[getRow()][col] != null && board[getRow()][col].getName().equals("包")){
+						return false;
+					}
 					return true;
 				}
 			}
