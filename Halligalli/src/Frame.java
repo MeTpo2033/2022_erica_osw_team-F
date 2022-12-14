@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+
 public class Frame extends JFrame {
 
 	private int fight;
@@ -137,4 +139,334 @@ public class Frame extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
+	public void setGame(int ps, int cs) { //Controller에서 호출 -> score 값만 남기고 초기화 
+		setVisible(false);
+		new Frame(ps,cs);
+	}
+
+	public void clickedStart() { // 완전 초기화
+		setVisible(false);
+		new Frame(0,0);
+	}
+
+	public void clickedBell() { // 조건 추가해야함
+		if(check(player_card, computer_card)) {
+			if(countdown >= 0) {
+				player_win();
+				timer.cancel();
+			}
+		}
+	}
+	Timer timer = new Timer();
+	public void TimerTask() {
+		TimerTask task= new TimerTask() {
+			public void run() {
+				if(countdown >= 0) {
+					countdown --;
+				}
+				else {
+					computer_win();
+					timer.cancel();
+				}
+			}
+		};
+		timer = new Timer();
+		timer.schedule(task, 0, 1000);
+	}
+	public void computer_win() {
+		stack_idx = 0;
+		if(computer_remain != 0) {
+			for ( int j = computer_remain-1 ; j < computer_remain-1 + stack ; j++) {
+				computer_deck[j] = stack_deck[stack_idx];
+				stack_idx ++;
+			}
+		}
+		else {
+			for ( int j = computer_remain ; j < computer_remain + stack ; j++) {
+				computer_deck[j] = stack_deck[stack_idx];
+				stack_idx ++;
+			}
+		}
+		computer_remain += stack;
+		computer_label.setText("<html><p style=\"text-align:left\">Computer</p>remaining cards : "+ computer_remain +"</html>");
+		for ( int i = 0 ; i < stack; i ++) {
+			stack_deck[i] = null;
+		}
+		stack = 0 ;
+		player_card = new Card("banana", 6);
+		computer_card = new Card("banana", 6);
+		fight = 0;
+	}
+
+	public void player_win() {
+		pp2.setVisible(false);
+		pp0.setVisible(false);
+		stack_idx = 0;
+		if(player_remain != 0) {
+			for ( int j = player_remain-1 ; j < player_remain-1 + stack ; j++) {
+				player_deck[j] = stack_deck[stack_idx];
+				stack_idx ++;
+			}
+		}
+		else {
+			for ( int j = player_remain ; j < player_remain + stack ; j++) {
+				player_deck[j] = stack_deck[stack_idx];
+				stack_idx ++;
+			}
+		}
+		player_remain += stack;
+		player_label.setText("<html><p style=\"text-align:right\">Player</p>remaining cards : "+ player_remain +"</html>");
+		for ( int i = 0 ; i < stack; i ++) {
+			stack_deck[i] = null;
+		}
+		stack = 0;
+		player_card = new Card("banana", 6);
+		computer_card = new Card("banana", 6);
+		fight = 0;
+	}
+
+	public void fight() {
+		if(check(player_card, computer_card)) {
+			countdown = second;
+			p1.setVisible(false);
+			fight = 1;
+			p1.setLayout(null);
+			p1 = new JPanel(new GridLayout(1,3));
+
+			pp0 = new JPanel();
+			pp0.setLayout(null);
+
+			pp2 = new JPanel(new FlowLayout());
+			timerBar = new TimerBar(second);
+			threadBar = new Thread(timerBar);
+			threadBar.start();
+			pp0.add(timerBar);
+
+			timerNum = new TimerNum(second);
+			threadNum = new Thread(timerNum);
+			threadNum.start();
+			pp2.add(timerNum);
+			p1.add(pp0);
+			p1.add(pp1);
+			p1.add(pp2);
+			cp.add(p1,BorderLayout.NORTH);
+
+
+
+
+			TimerTask();
+
+			// delay() 사용시 
+			/*
+			while(true) {
+				if (clickedBell()) {
+					//pp0.setVisible(false);
+					//pp2.setVisible(false);
+					break;
+				}
+				countdown--;
+				delay(1000);
+				if(countdown == 0) {
+
+					//pp0.setVisible(false);
+					//pp2.setVisible(false);
+				}
+			}
+			 */
+
+		}
+	}
+
+	public void clickedDraw() {
+		String fruit_player;
+		String fruit_computer;
+		if(!(pp2 == null) && fight == 0) {
+			pp0.setVisible(false);
+			pp2.setVisible(false);
+		}
+		if(fight == 0 && turn == 0) {
+			if(player_deck[0] != null) {
+				player_card = player_deck[0];
+				fruit_player = player_card.fruit();
+				int rank_player = player_card.face();
+				int [][] rank1 = get_rank(rank_player);
+				fruit_img = new ImageIcon("./Image/"+fruit_player+".png");
+				for (int n = 0; n < 3; n++) {
+					for (int m = 0; m < 3; m++) {
+						player_img[n][m].setVisible(false);
+						if(rank1[n][m] == 1) {						
+							player_img[n][m].setIcon(fruit_img);
+							player_img[n][m].setVisible(true);
+						}else{
+							player_img[n][m].setVisible(false);
+						}
+					}
+				}
+				player_remain--;
+				endgame();
+				stack_deck[stack] = player_deck[0];
+				stack++;
+				for(int i = 1 ; i <= 56 ; i++) {
+					player_deck[i-1] = player_deck[i];
+				}
+				player_label.setText("<html><p style=\"text-align:right\">Player</p>remaining cards : "+ player_remain +"</html>");
+				fight();
+				turn = 1;
+
+			}
+			else {
+				turn = 1;
+				endgame();
+			}
+		}
+		else if (fight == 0 && turn == 1){
+			if(computer_deck[0] != null) {
+				computer_card = computer_deck[0];
+				fruit_computer = computer_card.fruit();
+				int rank_computer = computer_card.face();
+				int[][] rank2 = get_rank(rank_computer);
+				fruit_img = new ImageIcon("./Image/"+fruit_computer+".png");
+
+				for (int i = 0; i < 3; i++) {
+					for (int j = 0; j < 3; j++) {
+						computer_img[i][j].setVisible(false);
+						if(rank2[i][j] == 1) {												
+							computer_img[i][j].setIcon(fruit_img);
+							computer_img[i][j].setVisible(true);
+						}else{
+							computer_img[i][j].setVisible(false);
+						}
+					}
+				}
+				computer_remain--;
+				endgame();
+				stack_deck[stack] = computer_deck[0];
+				stack++;
+				for(int i = 1 ; i <= 56 ; i++) {
+					computer_deck[i-1] = computer_deck[i];
+				}
+				computer_label.setText("<html><p style=\"text-align:left\">Computer</p>remaining cards : "+ computer_remain +"</html>");
+				fight();
+				turn = 0;
+			}
+			else {
+				turn = 0;
+				endgame();
+			}
+		}
+	}
+
+	public int[][] get_rank(int a){
+		if(a == 1) {
+			int[][] rank = {
+					{0,0,0},
+					{0,1,0},
+					{0,0,0}};
+			return rank;
+		}
+		else if(a == 2) {
+			int[][] rank = {
+					{1,0,0},
+					{0,0,0},
+					{0,0,1}};
+			return rank;
+		}
+		else if(a == 3) {
+			int[][] rank = {
+					{1,0,0},
+					{0,1,0},
+					{0,0,1}};
+			return rank;
+		}
+		else if(a == 4) {
+			int[][] rank = {
+					{1,0,1},
+					{0,0,0},
+					{1,0,1}};
+			return rank;
+		}
+		else if (a==5) {
+			int[][] rank = {
+					{1,0,1},
+					{0,1,0},
+					{1,0,1}};
+			return rank;
+		}
+		else {
+			int[][] rank = {
+					{0,0,0},
+					{0,0,0},
+					{0,0,0}};
+			return rank;
+		}
+	}
+
+	/**
+	 * check() -> 필드에 보여진 카드의 총 과일 수가 5개 인지 판별
+	 * @param a : player1의 카드
+	 * @param b : player2의 카드
+	 * @return 5개면 true, 5개가 아니면 false
+	 */
+	public boolean check(Card a, Card b) {
+		if(a.fruit().equals(b.fruit())) {
+			if(a.face() + b.face() == 5) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else if(!a.fruit().equals(b.fruit())) {
+			if(a.face() == 5 || b.face() == 5) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
+	/** delay() - 딜레이 기능을 구현하기 위한 메소드
+	 * 
+	 * @param time - 1000 == 1초 단위로 딜레이
+	 */
+	public void delay(int time) {
+		try {
+
+			Thread.sleep(time); //1초 대기
+
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+
+		}
+	}
+
+	public void endgame() {
+		if(player_remain == 56) {
+			JOptionPane.showMessageDialog(null, "승자는 " + "player" + " 입니다.");
+			player_score += 1;
+			String re = JOptionPane.showInputDialog("계속 하시겠습니까? Y/N ");
+			if(re.equals("Y") || re.equals("y")) {
+				setGame(player_score, computer_score);
+			}
+			else if(re.equals("N") || re.equals("n")) {
+				System.exit(0);
+			}
+		}
+		else if(computer_remain == 56) {
+			JOptionPane.showMessageDialog(null, "승자는 " + "Computer" + " 입니다.");
+			computer_score += 1;
+			String re = JOptionPane.showInputDialog("계속 하시겠습니까? Y/N ");
+			if(re.equals("Y") || re.equals("y")) {
+				setGame(player_score, computer_score);
+			}
+			else if(re.equals("N") || re.equals("n")) {
+				System.exit(0);
+			}
+		}
+	}
 }
