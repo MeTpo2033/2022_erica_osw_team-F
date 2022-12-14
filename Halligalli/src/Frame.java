@@ -1,10 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
-import java.time.LocalDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
-
-
 
 public class Frame extends JFrame {
 
@@ -20,7 +17,6 @@ public class Frame extends JFrame {
 	private Card computer_card = new Card("banana", 6);
 
 
-	private int idx;
 	private int countdown;
 	private int turn = 0; // (turn == 0): player's turn, (turn == 1): computer's turn
 	private int player_remain = 28; // 전체 카드가 56장이라고 할 때
@@ -196,6 +192,16 @@ public class Frame extends JFrame {
 		player_card = new Card("banana", 6);
 		computer_card = new Card("banana", 6);
 		fight = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				player_img[i][j].setVisible(false);
+			}
+		}
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				computer_img[i][j].setVisible(false);
+			}
+		}
 	}
 
 	public void player_win() {
@@ -223,6 +229,16 @@ public class Frame extends JFrame {
 		player_card = new Card("banana", 6);
 		computer_card = new Card("banana", 6);
 		fight = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				player_img[i][j].setVisible(false);
+			}
+		}
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				computer_img[i][j].setVisible(false);
+			}
+		}
 	}
 
 	public void fight() {
@@ -280,6 +296,7 @@ public class Frame extends JFrame {
 	public void clickedDraw() {
 		String fruit_player;
 		String fruit_computer;
+		endgame();
 		if(!(pp2 == null) && fight == 0) {
 			pp0.setVisible(false);
 			pp2.setVisible(false);
@@ -316,7 +333,6 @@ public class Frame extends JFrame {
 			}
 			else {
 				turn = 1;
-				endgame();
 			}
 		}
 		else if (fight == 0 && turn == 1){
@@ -351,7 +367,6 @@ public class Frame extends JFrame {
 			}
 			else {
 				turn = 0;
-				endgame();
 			}
 		}
 	}
