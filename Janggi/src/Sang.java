@@ -7,6 +7,12 @@ public class Sang extends Piece{
 	
 	@Override
 	public boolean moveAble(int row, int col) {
+		if(row == getRow()-3 && (col == getCol()-2 || col == getCol()+2) ||
+		   row == getRow()+3 && (col == getCol()-2 || col == getCol()+2) ||
+		   col == getCol()-3 && (row == getRow()-2 || row == getRow()+2) ||
+		   col == getCol()+3 && (row == getRow()-2 || row == getRow()+2)) {
+			return true;
+		}
 		return false;
 	}
 }
