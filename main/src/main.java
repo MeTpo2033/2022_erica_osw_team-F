@@ -1,6 +1,3 @@
-
-import omok.*;
-import jang.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
@@ -19,21 +16,24 @@ public class main extends JFrame{
 		
 		btn1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new jang.Frame(new jang.PieceBoard());
+				dispose();
+				new JanggiFrame(new PieceBoard());
 			}
 
 		});
 		
 		btn2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new omok.OmokFrame(new omok.OmokBoard());
+				dispose();
+				OmokBoard board = new OmokBoard();
+				new OmokFrame(board, 0, 0);
 			}
 
 		});
 		btn3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				long startTime = System.currentTimeMillis();
-				new hal.Starter();
+				dispose();
+				new Frame(0,0);
 			}
 
 		});		
