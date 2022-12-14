@@ -1,3 +1,4 @@
+
 import javax.swing.JOptionPane;
 
 public class PieceBoard {
@@ -24,12 +25,12 @@ public class PieceBoard {
 				if(i<5) country = 0; //초나라(BLUE)
 				else country = 1; //한나라(RED)
 				
-				if(arr[i][j] == 1) board[i][j] = new Cha("車", country, i, j);
+				if(arr[i][j] == 1) board[i][j] = new Cha("車", country, i, j, board);
 				else if(arr[i][j] == 2) board[i][j] = new Ma("馬", country, i, j);
 				else if(arr[i][j] == 3) board[i][j] = new Sang("象", country, i, j);
 				else if(arr[i][j] == 4) board[i][j] = new King("王", country, i, j);
 				else if(arr[i][j] == 5) board[i][j] = new Sa("士", country, i, j);
-				else if(arr[i][j] == 6) board[i][j] = new Po("包", country, i, j);
+				else if(arr[i][j] == 6) board[i][j] = new Po("包", country, i, j, board);
 				else if(arr[i][j] == 7) board[i][j] = new Jol("卒", country, i, j);
 				else board[i][j] = null;
 			}
